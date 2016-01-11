@@ -207,21 +207,45 @@
       {#- {%- block relbar2 %}{{ relbar() }}{% endblock %} #}
 
       {%- block footer %}
-        <div class="footer" role="contentinfo">
-          {%- if show_copyright %}
-            {%- if hasdoc('copyright') %}
-              {% trans path=pathto('copyright'), copyright=copyright|e %}&copy; <a href="{{ path }}">Copyright</a> {{ copyright }}.{% endtrans %}
-            {%- else %}
-              {% trans copyright=copyright|e %}&copy; Copyright {{ copyright }}.{% endtrans %}
+      <div class="related" role="navigation" aria-label="related navigation" style="margin: 30px -20px 0; padding: 30px 20px 0; border-top: 1px solid #ddd">
+        <ul>
+          <li>
+            {%- if show_copyright %}
+              {%- if hasdoc('copyright') %}
+                {% trans path=pathto('copyright'), copyright=copyright|e %}&copy; <a href="{{ path }}">Copyright</a> {{ copyright }}.{% endtrans %}
+              {%- else %}
+                {% trans copyright=copyright|e %}&copy; Copyright {{ copyright }}.{% endtrans %}
+              {%- endif %}
             {%- endif %}
-          {%- endif %}
-          {%- if last_updated %}
-            {% trans last_updated=last_updated|e %}Last updated on {{ last_updated }}.{% endtrans %}
-          {%- endif %}
-          {%- if show_sphinx %}
-            {% trans sphinx_version=sphinx_version|e %}Created using <a href="http://sphinx-doc.org/">Sphinx</a> {{ sphinx_version }}.{% endtrans %}
-          {%- endif %}
-        </div>
+            {%- if last_updated %}
+              {% trans last_updated=last_updated|e %}Last updated on {{ last_updated }}.{% endtrans %}
+            {%- endif %}
+            {%- if show_sphinx %}
+              {% trans sphinx_version=sphinx_version|e %}Created using <a href="http://sphinx-doc.org/">Sphinx</a> {{ sphinx_version }}.{% endtrans %}
+            {%- endif %}
+          </li>
+          <span style="float: right" class="lights" title="Toggles syntax highlighting between light and dark">
+            <i class="icon-lamp lights-icon"></i> Highlight Code Light/Dark
+          </span>
+          {%- for rellink in rellinks %}
+            <li class="right" {% if loop.first %}style="margin-right: 10px"{% endif %}>
+              <a href="{{ pathto(rellink[0]) }}" title="{{ rellink[1]|striptags|e }}"
+                 {{ accesskey(rellink[2]) }}>{{ rellink[3] }}</a>
+              {%- if not loop.first %}{{ reldelim2 }}{% endif %}</li>
+          {%- endfor %}
+          {%- for parent in parents %}
+            <li><a href="{{ parent.link|e }}" {% if loop.last %}{{ accesskey("U") }}{% endif %}>{{ parent.title }}</a>{{ reldelim1 }}</li>
+          {%- endfor %}
+          {%- block relbaritems2 %} {% endblock %}
+            <li class="right">
+              {% if pagename != "search" and pagename != "genindex" %}
+                <a href="https://{{ github_host }}/{{ github_user }}/{{ github_repo }}/blob/{{ github_branch }}/source/{{ pagename }}{{ source_suffix }}" class="right">
+                <img src="{{pathto("_static/GitHub-Mark-32px.png", 1)}}" height="12px"/> Edit on GitHub</a>
+                {{ reldelim2 }}
+              {% endif %}
+            </li>
+        </ul>
+      </div>
       {%- endblock %}
     </div>
   </body>
